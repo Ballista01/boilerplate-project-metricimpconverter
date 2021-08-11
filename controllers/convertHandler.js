@@ -9,13 +9,17 @@ function ConvertHandler() {
     let regex = /((^\d*\.?\d+$)|(^\d+\.?\d*$))|(((^\d*\.?\d+)|(^\d+\.?\d*))\/((\d*\.?\d+$)|(\d+\.?\d*$)))/g;
     let matchArr = input.match(regex);
     if (matchArr && matchArr.length > 0) {
-      console.log('getNum Match Result:');
-      console.log(matchArr);
+      // console.log('getNum Match Result:');
+      // console.log(matchArr);
 
       result = evaluate(matchArr[0]);
     } else {
-      console.log('getNum: match failed');
-      result = null;
+      // console.log('getNum: match failed');
+      const doubleSlashRegex = /.*\/.*\/.*/g;
+      // Input will be invalid only if input has 2 or more slashs, input with no num
+      // but unit will be accepted as initNum equals to 1.
+      if(doubleSlashRegex.test(input)) result = null;
+      else result = 1;
     }
     return result;
   };
@@ -25,12 +29,12 @@ function ConvertHandler() {
     let regex = /gal$|L$|mi$|km$|lbs$|kg$/g;
     let matchArr = input.match(regex);
     if (matchArr && matchArr.length > 0) {
-      console.log('getUnit Match Result:');
-      console.log(matchArr);
+      // console.log('getUnit Match Result:');
+      // console.log(matchArr);
 
       result = matchArr[0];
     } else {
-      console.log('getUnit: match failed');
+      // console.log('getUnit: match failed');
       result = null;
     }
     return result;
@@ -136,11 +140,11 @@ function ConvertHandler() {
   };
 
   this.process = function(input){
-    const initNum = this.getNum(input);
+    let initNum = this.getNum(input);
     const initUnit = this.getUnit(input);
     if(initNum == null || initUnit == null){
       return 'invalid unit';
-    }
+    };
     const returnNum = this.convert(initNum, initUnit);
     const returnUnit = this.getReturnUnit(initUnit);
     const res = this.getString(initNum, initUnit, returnNum, returnUnit);
